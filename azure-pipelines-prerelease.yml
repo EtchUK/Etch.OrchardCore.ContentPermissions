@@ -6,9 +6,9 @@ variables:
 
 steps:
 - task: tmarkovski.projectversionasvariable.versionintovariable.projectversionasvariable@1
-  displayName: 'Get Project Version as variables from Etch.OrchardCore.SecuredContent.csproj'
+  displayName: 'Get Project Version as variables from Etch.OrchardCore.ContentPermissions.csproj'
   inputs:
-    path: Etch.OrchardCore.SecuredContent.csproj
+    path: Etch.OrchardCore.ContentPermissions.csproj
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build'

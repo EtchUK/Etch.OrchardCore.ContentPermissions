@@ -1,4 +1,4 @@
-# Etch.OrchardCore.SecuredContent
+# Etch.OrchardCore.ContentPermissions
 
 Module for Orchard Core to enable configuring security per content item.
 
