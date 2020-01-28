@@ -1,0 +1,10 @@
+language: csharp
+mono: none
+dist: bionic
+dotnet: 3.0
+
+install:
+- dotnet restore
+
+script:
+ - dotnet build

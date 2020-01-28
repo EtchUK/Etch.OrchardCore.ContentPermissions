@@ -1,0 +1,30 @@
+pool:
+  vmImage: 'windows-2019'
+
+variables:
+  BuildConfiguration: 'Release'
+
+steps:
+- task: tmarkovski.projectversionasvariable.versionintovariable.projectversionasvariable@1
+  displayName: 'Get Project Version as variables from Etch.OrchardCore.SecuredContent.csproj'
+  inputs:
+    path: Etch.OrchardCore.SecuredContent.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build'
+  inputs:
+    arguments: '-c $(BuildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet pack'
+  inputs:
+    command: pack
+    versioningScheme: byPrereleaseNumber
+    majorVersion: '$(Version.Major)'
+    minorVersion: '$(Version.Minor)'
+    patchVersion: '$(Version.Patch)'
+
+- task: PublishPipelineArtifact@0
+  displayName: 'Publish Pipeline Artifact'
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)'
