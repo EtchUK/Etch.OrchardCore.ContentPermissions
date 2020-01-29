@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.0.1-rc1</Version>
+    <Version>0.1.0-rc1</Version>
     <PackageId>Etch.OrchardCore.ContentPermissions</PackageId>
     <Title>Content Permissions</Title>
     <Authors>Etch UK Ltd.</Authors>
