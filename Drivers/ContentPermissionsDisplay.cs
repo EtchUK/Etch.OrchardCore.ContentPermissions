@@ -3,6 +3,7 @@ using Etch.OrchardCore.ContentPermissions.ViewModels;
 using Microsoft.AspNetCore.Http;
 using OrchardCore.ContentManagement.Display.ContentDisplay;
 using OrchardCore.ContentManagement.Display.Models;
+using OrchardCore.ContentManagement.Metadata;
 using OrchardCore.DisplayManagement.ModelBinding;
 using OrchardCore.DisplayManagement.Views;
 using OrchardCore.Security.Services;
@@ -18,6 +19,7 @@ namespace Etch.OrchardCore.ContentPermissions.Drivers
     {
         #region Dependencies
 
+        private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRoleService _roleService;
 
@@ -25,8 +27,9 @@ namespace Etch.OrchardCore.ContentPermissions.Drivers
 
         #region Constructor
 
-        public ContentPermissionsDisplay(IHttpContextAccessor httpContextAccessor, IRoleService roleService)
+        public ContentPermissionsDisplay(IContentDefinitionManager contentDefinitionManager, IHttpContextAccessor httpContextAccessor, IRoleService roleService)
         {
+            _contentDefinitionManager = contentDefinitionManager;
             _httpContextAccessor = httpContextAccessor;
             _roleService = roleService;
         }
@@ -42,8 +45,16 @@ namespace Etch.OrchardCore.ContentPermissions.Drivers
                 return null;
             }
 
+            var settings = GetSettings(part);
+            var redirectUrl = settings.HasRedirectUrl ? settings.RedirectUrl : "/Error/403";
+
+            if (!redirectUrl.StartsWith("/"))
+            {
+                redirectUrl = $"/{redirectUrl}";
+            }
+
             _httpContextAccessor.HttpContext.Response.StatusCode = 403;
-            _httpContextAccessor.HttpContext.Response.Redirect($"{_httpContextAccessor.HttpContext.Request.PathBase}/Error/403", false);
+            _httpContextAccessor.HttpContext.Response.Redirect($"{_httpContextAccessor.HttpContext.Request.PathBase}{redirectUrl}", false);
             return null;
         }
 
@@ -88,6 +99,13 @@ namespace Etch.OrchardCore.ContentPermissions.Drivers
             }
 
             return false;
+        }
+
+        private ContentPermissionsPartSettings GetSettings(ContentPermissionsPart part)
+        {
+            var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(part.ContentItem.ContentType);
+            var contentTypePartDefinition = contentTypeDefinition.Parts.FirstOrDefault(x => string.Equals(x.PartDefinition.Name, nameof(ContentPermissionsPart)));
+            return contentTypePartDefinition.GetSettings<ContentPermissionsPartSettings>();
         }
 
         #endregion
