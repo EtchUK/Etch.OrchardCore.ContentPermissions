@@ -76,6 +76,11 @@ namespace Etch.OrchardCore.ContentPermissions.Drivers
         {
             await updater.TryUpdateModelAsync(model, Prefix, m => m.Enabled, m => m.Roles);
 
+            if (!model.Enabled)
+            {
+                model.Roles = Array.Empty<string>();
+            }
+
             return Edit(model, context);
         }
 
