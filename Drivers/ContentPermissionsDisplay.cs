@@ -40,7 +40,7 @@ namespace Etch.OrchardCore.ContentPermissions.Drivers
 
         public override IDisplayResult Display(ContentPermissionsPart part, BuildPartDisplayContext context)
         {
-            if (!part.Enabled || CanAccess(_httpContextAccessor.HttpContext.User, part.Roles))
+            if (context.DisplayType != "Detail" || !part.Enabled || CanAccess(_httpContextAccessor.HttpContext.User, part.Roles))
             {
                 return null;
             }
