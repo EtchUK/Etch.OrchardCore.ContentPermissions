@@ -90,9 +90,19 @@ namespace Etch.OrchardCore.ContentPermissions.Drivers
 
         private bool CanAccess(ClaimsPrincipal user, string[] roles)
         {
-            if (user == null)
+            if (roles.Contains("Anonymous"))
+            {
+                return true;
+            }
+
+            if(user == null)
             {
                 return false;
+            }
+
+            if (roles.Contains("Authenticated") && user.Identity.IsAuthenticated)
+            {
+                return true;
             }
 
             foreach (var role in roles)
