@@ -1,5 +1,6 @@
 ﻿using Etch.OrchardCore.ContentPermissions.Drivers;
 using Etch.OrchardCore.ContentPermissions.Models;
+using Etch.OrchardCore.ContentPermissions.Services;
 using Etch.OrchardCore.ContentPermissions.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using OrchardCore.ContentManagement;
@@ -14,6 +15,9 @@ namespace Etch.OrchardCore.ContentPermissions
     {
         public override void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddScoped<IContentPermissionsService, ContentPermissionsService>();
+            
             services.AddScoped<IContentPartDisplayDriver, ContentPermissionsDisplay>();
             services.AddContentPart<ContentPermissionsPart>();
 
