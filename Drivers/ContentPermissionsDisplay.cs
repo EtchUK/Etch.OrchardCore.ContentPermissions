@@ -39,15 +39,16 @@ namespace Etch.OrchardCore.ContentPermissions.Drivers
 
         public override IDisplayResult Display(ContentPermissionsPart part, BuildPartDisplayContext context)
         {
-            if (context.DisplayType != "Detail" || !part.Enabled || _contentPermissionsService.CanAccess(part))
+            var settings = _contentPermissionsService.GetSettings(part);
+
+            if (context.DisplayType != "Detail" || !settings.HasRedirectUrl || _contentPermissionsService.CanAccess(part))
             {
                 return null;
             }
 
-            var settings = _contentPermissionsService.GetSettings(part);
-            var redirectUrl = settings.HasRedirectUrl ? settings.RedirectUrl : "/Error/403";
+            var redirectUrl = settings.RedirectUrl;
 
-            if (!redirectUrl.StartsWith("/"))
+            if (!settings.RedirectUrl.StartsWith("/"))
             {
                 redirectUrl = $"/{redirectUrl}";
             }
@@ -67,8 +68,7 @@ namespace Etch.OrchardCore.ContentPermissions.Drivers
                 model.Enabled = part.Enabled;
                 model.PossibleRoles = roles.ToArray();
                 model.Roles = part.Roles;
-            })
-            .Location("Parts#Security:10");
+            });
         }
 
         public override async Task<IDisplayResult> UpdateAsync(ContentPermissionsPart model, IUpdateModel updater, UpdatePartEditorContext context)

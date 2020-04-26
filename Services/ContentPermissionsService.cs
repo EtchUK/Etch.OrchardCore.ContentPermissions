@@ -1,5 +1,6 @@
 ﻿using Etch.OrchardCore.ContentPermissions.Models;
 using Microsoft.AspNetCore.Http;
+using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Metadata;
 using System;
 using System.Linq;
@@ -27,8 +28,18 @@ namespace Etch.OrchardCore.ContentPermissions.Services
 
         #region Helpers
 
+        public bool CanAccess(ContentItem contentItem)
+        {
+            return CanAccess(contentItem.As<ContentPermissionsPart>());
+        }
+
         public bool CanAccess(ContentPermissionsPart part) 
         {
+            if (part == null || !part.Enabled || !part.Roles.Any())
+            {
+                return true;
+            }
+
             if (part.Roles.Contains("Anonymous")) 
             {
                 return true;
@@ -68,6 +79,7 @@ namespace Etch.OrchardCore.ContentPermissions.Services
 
     public interface IContentPermissionsService 
     {
+        bool CanAccess(ContentItem contentItem);
         bool CanAccess(ContentPermissionsPart part);
 
         ContentPermissionsPartSettings GetSettings(ContentPermissionsPart part);
