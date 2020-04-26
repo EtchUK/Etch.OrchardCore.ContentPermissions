@@ -5,6 +5,6 @@ using OrchardCore.Modules.Manifest;
     Category = "Security",
     Description = "Configuring access at a per content item level.",
     Name = "Content Permissions",
-    Version = "0.1.2",
+    Version = "0.2.0",
     Website = "https://etchuk.com"
 )]
