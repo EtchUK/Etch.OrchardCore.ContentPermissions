@@ -8,7 +8,7 @@ Module for Orchard Core to enable configuring access at a content item level.
 
 ## Orchard Core Reference
 
-This module is referencing the RC2 build of Orchard Core ([`1.0.0-rc2-13450`](https://www.nuget.org/packages/OrchardCore.Module.Targets/1.0.0-rc2-13450)).
+This module is referencing a stable build of Orchard Core ([`1.0.0`](https://www.nuget.org/packages/OrchardCore.Module.Targets/1.0.0)).
 
 ## Installing
 

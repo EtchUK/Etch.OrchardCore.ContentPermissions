@@ -1,0 +1,83 @@
+resources:
+  - repo: self
+
+trigger:
+  tags:
+    include:
+      - "*"
+  branches:
+    include:
+      - main
+
+variables:
+  buildConfiguration: "Release"
+
+stages:
+  - stage: build
+    displayName: Build
+    variables:
+      - group: "Global"
+    jobs:
+      - job: Build
+        pool:
+          vmImage: "windows-latest"
+        steps:
+          - task: SonarCloudPrepare@1
+            displayName: "Prepare SonarCloud Analysis"
+            inputs:
+              SonarCloud: "SC"
+              organization: "$(SC_ORGANIZATION)"
+              scannerMode: "MSBuild"
+              projectKey: "Etch.OrchardCore.ContentPermissions"
+              projectName: "Etch.OrchardCore.ContentPermissions"
+
+          - task: tmarkovski.projectversionasvariable.versionintovariable.projectversionasvariable@1
+            displayName: "Get Project Version as variables from Etch.OrchardCore.ContentPermissions.csproj"
+            inputs:
+              path: ./Etch.OrchardCore.ContentPermissions.csproj
+
+          - task: DotNetCoreCLI@2
+            displayName: "Build module"
+            inputs:
+              arguments: "-c $(BuildConfiguration)"
+              projects: "./Etch.OrchardCore.ContentPermissions.csproj"
+
+          - task: SonarCloudAnalyze@1
+            displayName: "Run SonarCloud Analysis"
+
+          - task: DotNetCoreCLI@2
+            displayName: "dotnet pack"
+            inputs:
+              command: pack
+              packagesToPack: "./Etch.OrchardCore.ContentPermissions.csproj"
+              versioningScheme: byEnvVar
+              versionEnvVar: "VERSION_MAJORMINORPATCH"
+
+          - task: PublishPipelineArtifact@0
+            displayName: "Publish Pipeline Artifact"
+            inputs:
+              targetPath: "$(Build.ArtifactStagingDirectory)"
+
+          - task: SonarCloudPublish@1
+            displayName: "Publish SonarCloud Results"
+
+  - stage: publish
+    displayName: NuGet Publish
+    dependsOn: build
+    condition: and(succeeded(), startsWith(variables['build.sourceBranch'], 'refs/tags/'))
+    jobs:
+      - job: Publish
+        pool:
+          vmImage: "windows-latest"
+        steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              source: "current"
+              path: "$(Pipeline.Workspace)"
+          - task: NuGetCommand@2
+            displayName: "NuGet push"
+            inputs:
+              command: push
+              packagesToPush: "$(Pipeline.Workspace)/**/drop/*.nupkg"
+              nuGetFeedType: external
+              publishFeedCredentials: "NuGet"
