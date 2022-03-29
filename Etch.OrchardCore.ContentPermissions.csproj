@@ -17,6 +17,7 @@
     <PackageReference Include="OrchardCore.ContentManagement.Display" Version="1.1.0" />
     <PackageReference Include="OrchardCore.ContentTypes" Version="1.1.0" />
     <PackageReference Include="OrchardCore.DisplayManagement" Version="1.1.0" />
+    <PackageReference Include="OrchardCore.Indexing" Version="1.1.0" />
     <PackageReference Include="OrchardCore.ResourceManagement" Version="1.1.0" />
     <PackageReference Include="OrchardCore.Module.Targets" Version="1.1.0" />
   </ItemGroup>

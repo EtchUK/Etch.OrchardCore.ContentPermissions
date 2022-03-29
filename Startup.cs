@@ -1,4 +1,5 @@
 ﻿using Etch.OrchardCore.ContentPermissions.Drivers;
+using Etch.OrchardCore.ContentPermissions.Indexing;
 using Etch.OrchardCore.ContentPermissions.Liquid;
 using Etch.OrchardCore.ContentPermissions.Models;
 using Etch.OrchardCore.ContentPermissions.Services;
@@ -8,8 +9,10 @@ using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Display.ContentDisplay;
 using OrchardCore.ContentTypes.Editors;
 using OrchardCore.Data.Migration;
+using OrchardCore.Indexing;
 using OrchardCore.Liquid;
 using OrchardCore.Modules;
+using YesSql.Indexes;
 
 namespace Etch.OrchardCore.ContentPermissions
 {
@@ -26,6 +29,9 @@ namespace Etch.OrchardCore.ContentPermissions
             services.AddLiquidFilter<UserCanViewFilter>("user_can_view");
 
             services.AddScoped<IDataMigration, Migrations>();
+
+            services.AddSingleton<IIndexProvider, ContentPermissionsPartIndexProvider>();
+            services.AddScoped<IContentPartIndexHandler, ContentPermissionsPartIndexHandler>();
         }
     }
 }
