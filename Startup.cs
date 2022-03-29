@@ -30,7 +30,6 @@ namespace Etch.OrchardCore.ContentPermissions
 
             services.AddScoped<IDataMigration, Migrations>();
 
-            services.AddSingleton<IIndexProvider, ContentPermissionsPartIndexProvider>();
             services.AddScoped<IContentPartIndexHandler, ContentPermissionsPartIndexHandler>();
         }
     }
