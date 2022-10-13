@@ -41,20 +41,27 @@ namespace Etch.OrchardCore.ContentPermissions.Drivers
         {
             var settings = _contentPermissionsService.GetSettings(part);
 
-            if (context.DisplayType != "Detail" || !settings.HasRedirectUrl || _contentPermissionsService.CanAccess(part))
+            if (context.DisplayType != "Detail" || _contentPermissionsService.CanAccess(part))
             {
                 return null;
             }
 
-            var redirectUrl = settings.RedirectUrl;
+            _httpContextAccessor.HttpContext.Response.StatusCode = 403;
 
-            if (!settings.RedirectUrl.StartsWith("/"))
+            var redirectUrl = "/Error/403";
+
+            if (settings.HasRedirectUrl)
             {
-                redirectUrl = $"/{redirectUrl}";
+                redirectUrl = settings.RedirectUrl;
+
+                if (!settings.RedirectUrl.StartsWith("/"))
+                {
+                    redirectUrl = $"/{redirectUrl}";
+                }
             }
 
-            _httpContextAccessor.HttpContext.Response.StatusCode = 403;
             _httpContextAccessor.HttpContext.Response.Redirect($"{_httpContextAccessor.HttpContext.Request.PathBase}{redirectUrl}", false);
+
             return null;
         }
 
