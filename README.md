@@ -33,7 +33,9 @@ Users can be displayed an alternative by customising the view template, as shown
 Example of how to check users permission and display alternative content with Liquid template.
 
 ```
-{% if Model.ContentItem | user_can_view %}
+{% assign canViewContent = Model.ContentItem | user_can_view %}
+
+{% if canViewContent %}
 	<p>Awesome content that you have permission to view.</p>
 {% else %}
 	<p>Unfortunately you're not able to view this content.</p>
