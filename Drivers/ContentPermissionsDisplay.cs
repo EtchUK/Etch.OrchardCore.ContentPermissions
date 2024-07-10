@@ -49,13 +49,13 @@ namespace Etch.OrchardCore.ContentPermissions.Drivers
             _httpContextAccessor.HttpContext.Response.StatusCode = 403;
 
             var redirectUrl = "/Error/403";
-            var test = await settings;
+            var partSettings = await settings;
 
-            if (test.HasRedirectUrl)
+            if (partSettings.HasRedirectUrl)
             {
-                redirectUrl = test.RedirectUrl;
+                redirectUrl = partSettings.RedirectUrl;
 
-                if (!test.RedirectUrl.StartsWith("/"))
+                if (!partSettings.RedirectUrl.StartsWith('/'))
                 {
                     redirectUrl = $"/{redirectUrl}";
                 }
