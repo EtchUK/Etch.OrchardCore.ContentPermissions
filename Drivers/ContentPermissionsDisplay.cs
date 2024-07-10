@@ -37,9 +37,9 @@ namespace Etch.OrchardCore.ContentPermissions.Drivers
 
         #region Overrides
 
-        public override IDisplayResult Display(ContentPermissionsPart part, BuildPartDisplayContext context)
+        public override async Task<IDisplayResult> DisplayAsync(ContentPermissionsPart part, BuildPartDisplayContext context)
         {
-            var settings = _contentPermissionsService.GetSettings(part);
+            var settings = _contentPermissionsService.GetSettingsAsync(part);
 
             if (context.DisplayType != "Detail" || _contentPermissionsService.CanAccess(part))
             {
@@ -49,12 +49,13 @@ namespace Etch.OrchardCore.ContentPermissions.Drivers
             _httpContextAccessor.HttpContext.Response.StatusCode = 403;
 
             var redirectUrl = "/Error/403";
+            var test = await settings;
 
-            if (settings.HasRedirectUrl)
+            if (test.HasRedirectUrl)
             {
-                redirectUrl = settings.RedirectUrl;
+                redirectUrl = test.RedirectUrl;
 
-                if (!settings.RedirectUrl.StartsWith("/"))
+                if (!test.RedirectUrl.StartsWith("/"))
                 {
                     redirectUrl = $"/{redirectUrl}";
                 }

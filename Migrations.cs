@@ -1,6 +1,7 @@
 ﻿using OrchardCore.ContentManagement.Metadata;
 using OrchardCore.ContentManagement.Metadata.Settings;
 using OrchardCore.Data.Migration;
+using System.Threading.Tasks;
 
 namespace Etch.OrchardCore.ContentPermissions
 {
@@ -23,9 +24,9 @@ namespace Etch.OrchardCore.ContentPermissions
 
         #region Migrations
 
-        public int Create()
+        public async Task<int> CreateAsync()
         {
-            _contentDefinitionManager.AlterPartDefinition("ContentPermissionsPart", builder => builder
+            await _contentDefinitionManager.AlterPartDefinitionAsync("ContentPermissionsPart", builder => builder
                 .Attachable()
                 .WithDescription("Provides ability to control which roles can view content item.")
                 .WithDisplayName("Content Permissions")
