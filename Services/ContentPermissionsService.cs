@@ -4,6 +4,7 @@ using OrchardCore.ContentManagement;
 using OrchardCore.ContentManagement.Metadata;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Etch.OrchardCore.ContentPermissions.Services 
 {
@@ -66,9 +67,9 @@ namespace Etch.OrchardCore.ContentPermissions.Services
             return false;
         }
 
-        public ContentPermissionsPartSettings GetSettings(ContentPermissionsPart part) 
+        public async Task<ContentPermissionsPartSettings> GetSettingsAsync(ContentPermissionsPart part) 
         {
-            var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(part.ContentItem.ContentType);
+            var contentTypeDefinition = await _contentDefinitionManager.GetTypeDefinitionAsync(part.ContentItem.ContentType);
             var contentTypePartDefinition = contentTypeDefinition.Parts.FirstOrDefault(x => string.Equals(x.PartDefinition.Name, nameof(ContentPermissionsPart)));
             return contentTypePartDefinition.GetSettings<ContentPermissionsPartSettings>();
         }
@@ -82,6 +83,6 @@ namespace Etch.OrchardCore.ContentPermissions.Services
         bool CanAccess(ContentItem contentItem);
         bool CanAccess(ContentPermissionsPart part);
 
-        ContentPermissionsPartSettings GetSettings(ContentPermissionsPart part);
+        Task<ContentPermissionsPartSettings> GetSettingsAsync(ContentPermissionsPart part);
     }
 }
